@@ -1,13 +1,15 @@
-from sqlalchemy import text
-from app.repositories.db import engine
+from sqlalchemy.orm import Session
+from app.models.wallet_models import Wallet
 
 
 class WalletRepository:
+    def __init__(self, db: Session):
+        self.db = db
 
     def get_all(self):
-        with engine.connect() as conn:
-            rows = conn.execute(
-                text("SELECT * FROM wallets ORDER BY id")
-            ).mappings().all()
-
-            return [dict(r) for r in rows]
+        return (
+            self.db
+            .query(Wallet)
+            .order_by(Wallet.id)
+            .all()
+        )
