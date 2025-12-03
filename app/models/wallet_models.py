@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, Text, TIMESTAMP, func, text
 from sqlalchemy.dialects.postgresql import ENUM
 
 from app.repositories.db import Base
+from app.models.enums import BlockchainEnum, ActivityEnum
 
 
 class Wallet(Base):
@@ -19,7 +20,12 @@ class Wallet(Base):
     )
 
     chain = Column(
-        ENUM(name="blockchain_enum"),
+        ENUM(
+            BlockchainEnum,
+            name="blockchain_enum",
+            create_type=False,
+            validate_strings=True
+        ),
         nullable=False
     )
 
@@ -40,7 +46,12 @@ class Wallet(Base):
     )
 
     status = Column(
-        ENUM(name="activity_enum"),
+        ENUM(
+            ActivityEnum,
+            name="activity_enum",
+            create_type=False,
+            validate_strings=True
+        ),
         server_default=text("'active'"),
         nullable=False
     )
