@@ -1,6 +1,8 @@
 from dotenv import load_dotenv
 import os
 from sqlalchemy import create_engine
+from sqlalchemy.orm import declarative_base, sessionmaker
+
 load_dotenv()
 
 
@@ -14,4 +16,18 @@ engine = create_engine(
     pool_recycle=1800
 )
 
+Base = declarative_base()
 
+SessionLocal = sessionmaker(
+    autocommit=False,
+    autoflush=False,
+    bind=engine
+)
+
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
