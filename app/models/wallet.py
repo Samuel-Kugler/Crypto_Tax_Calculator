@@ -1,12 +1,13 @@
 from sqlalchemy import Column, Integer, Text, TIMESTAMP, func, text
 from sqlalchemy.dialects.postgresql import ENUM
+from sqlalchemy.orm import relationship
 
 from app.repositories.db import Base
 from app.models.enums import BlockchainEnum, ActivityEnum
 
 
 class Wallet(Base):
-    __tablename__ = "wallets"
+    __tablename__ = "wallet"
 
     id = Column(
         Integer,
@@ -55,3 +56,5 @@ class Wallet(Base):
         server_default=text("'active'"),
         nullable=False
     )
+
+    transactions = relationship("Transaction", back_populates="wallet")

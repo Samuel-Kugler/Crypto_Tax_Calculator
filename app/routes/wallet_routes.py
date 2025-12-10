@@ -15,5 +15,6 @@ def list_wallets(db: Session = Depends(get_db)):
 
     wallets = repo.get_all()
 
+    print(wallets)
     return wallets
 
