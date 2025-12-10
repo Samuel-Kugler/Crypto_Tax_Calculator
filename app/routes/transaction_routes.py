@@ -9,7 +9,7 @@ router = APIRouter(
 )
 
 
-@router.get("/")
+@router.get("/all")
 def list_wallets(db: Session = Depends(get_db)):
     repo = TransactionRepository(db)
 

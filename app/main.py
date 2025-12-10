@@ -17,11 +17,10 @@ def index():
     return """
     <h1>Welcome!</h1>
     <p>
-        <a href="http://127.0.0.1:8000/wallets">➡️ Zu den Wallets</a>
+        <a href="http://127.0.0.1:8000/wallets/all">➡️ All wallets</a>
         <br>
-        <a href="http://127.0.0.1:8000/transactions">➡️ Zu den Transactions</a>
+        <a href="http://127.0.0.1:8000/transactions/all">➡️ All transactions</a>
+        <br>
+        <a href="http://127.0.0.1:8000/wallets/1/alchemy-transfers"➡️ example for wallet 1</a>
     </p>
     """
-
-
-

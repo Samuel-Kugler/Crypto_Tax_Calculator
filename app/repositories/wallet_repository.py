@@ -13,3 +13,11 @@ class WalletRepository:
             .order_by(Wallet.id)
             .all()
         )
+
+    def get_by_id(self, wallet_id: int) -> Wallet | None:
+        return (
+            self.db
+            .query(Wallet)
+            .filter(Wallet.id == wallet_id)
+            .first()
+        )
