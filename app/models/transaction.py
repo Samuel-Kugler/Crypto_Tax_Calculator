@@ -26,7 +26,7 @@ class Transaction(Base):
              create_type=False,
              validate_strings=True
              ),
-        nullabla=False
+        nullable=False
     )
 
     asset_symbol = Column(Text, nullable=False)
@@ -38,10 +38,10 @@ class Transaction(Base):
 
     fee_amount = Column(
         Numeric(38, 18),
-        nullable=False
+        nullable=True
     )
 
-    fee_asset_symbol = Column(Text, nullable=False)
+    fee_asset_symbol = Column(Text, nullable=True)
 
     occurred_at = Column(
         TIMESTAMP(timezone=True),
@@ -50,7 +50,7 @@ class Transaction(Base):
 
     imported_at = Column(
         TIMESTAMP(timezone=True),
-        serfer_default=func.now(),
+        server_default=func.now(),
         nullable=False
     )
 

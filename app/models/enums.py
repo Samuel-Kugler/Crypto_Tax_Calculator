@@ -11,5 +11,5 @@ class ActivityEnum(str, enum.Enum):
 
 
 class DirectionEnum(str, enum.Enum):
-    into_wallet = "in"
-    out_of_wallet = "out"
+    IN = "IN"
+    OUT = "OUT"
