@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from app.models.wallet_models import Wallet
+from app.models.wallet import Wallet
 
 
 class WalletRepository:
