@@ -1,31 +1,22 @@
 import os
 import httpx
+
 from app.models.wallet import Wallet
-
-ALCHEMY_API_KEY = os.getenv("ALCHEMY_API_KEY")
-if not ALCHEMY_API_KEY:
-    raise RuntimeError("ALCHEMY_API_KEY is missing.")
-
-ALCHEMY_URLS = {
-    "ETH": f"https://eth-mainnet.g.alchemy.com/v2/{ALCHEMY_API_KEY}"
-}
+from app.exceptions.domain import UnsupportedChainException
 
 
 def get_url_for_wallet(wallet: Wallet) -> str:
-    """
-    Gets the url to fetch the data for a wallet.
-    :param wallet: Wallet
-    :return: str
-    """
-    try:
-        return ALCHEMY_URLS[wallet.chain]
-    except KeyError:
-        raise RuntimeError(f"Chain '(wallet.chain)' is not supported for yet.")
+    api_key = os.getenv("ALCHEMY_API_KEY")
+    if not api_key:
+        raise RuntimeError("ALCHEMY_API_KEY is missing.")
+
+    if wallet.chain == "ETH":
+        return f"https://eth-mainnet.g.alchemy.com/v2/{api_key}"
+
+    raise UnsupportedChainException(wallet.chain)
 
 
 def fetch_transfers_for_wallet(wallet: Wallet, direction: str):
-    """Gets all the trades for a wallet.
-    Checks if the transfer is going in or out."""
     url = get_url_for_wallet(wallet)
 
     if direction == "IN":
@@ -41,32 +32,29 @@ def fetch_transfers_for_wallet(wallet: Wallet, direction: str):
         "toBlock": "latest",
         "withMetadata": True,
         "excludeZeroValue": False,
-        "category": ["external", "erc20"],  # only ETH
-        "maxCount": "0x3e8"  # 1000 transactions
+        "category": ["external", "erc20"],
+        "maxCount": "0x3e8",
     }
 
     payload = {
         "jsonrpc": "2.0",
         "id": 1,
         "method": "alchemy_getAssetTransfers",
-        "params": [params]
+        "params": [params],
     }
 
     all_transfers = []
 
     with httpx.Client(timeout=20.0) as client:
         while True:
-            #requesting
             response = client.post(url, json=payload)
             response.raise_for_status()
             data = response.json()
 
-            #processing
             result = data.get("result") or {}
             transfers = result.get("transfers") or []
             all_transfers.extend(transfers)
 
-            #pages
             page_key = result.get("pageKey")
             if not page_key:
                 break
