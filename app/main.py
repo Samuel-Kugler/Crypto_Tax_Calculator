@@ -25,7 +25,7 @@ def index():
     <p>
         <a href="http://127.0.0.1:8000/wallets/all">➡️ All wallets</a>
         <br>
-        <a href="http://127.0.0.1:8000/transactions/all">➡️ All transactions</a>
+        <a href="http://127.0.0.1:8000/transactions/all_transactions">➡️ All transactions</a>
         <br>
         <a href="http://127.0.0.1:8000/trades/1/transfers">➡️ transfers for wallet 1</a>
     </p>

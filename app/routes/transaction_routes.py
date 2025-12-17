@@ -1,19 +1,15 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from app.repositories.transaction_repository import TransactionRepository
+from app.services.transaction_service import get_transactions
 from app.repositories.db import get_db
 
 router = APIRouter(
     prefix="/transactions",
+    tags=["transactions"]
 )
 
 
-@router.get("/all")
+@router.get("/all_transactions")
 def list_wallets(db: Session = Depends(get_db)):
-    repo = TransactionRepository(db)
-
-    transactions = repo.get_all()
-
-    print(transactions)
-    return transactions
+    return get_transactions(db=db)
