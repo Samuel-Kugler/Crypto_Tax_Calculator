@@ -9,6 +9,7 @@ from app.repositories.db import Base, engine  # noqa
 from app.models import wallet, transaction  # noqa
 
 
+#uvicorn app.main:app --reload
 app = FastAPI(title="Crypto Tax Calculator")
 register_exception_handlers(app)
 
