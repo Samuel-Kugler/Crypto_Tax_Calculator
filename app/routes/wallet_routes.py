@@ -1,31 +1,20 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from app.repositories.wallet_repository import WalletRepository
 from app.repositories.db import get_db
+from app.services.wallet_service import list_wallets, get_wallet_by_id
 
 router = APIRouter(
     prefix="/wallets",
+    tags=["wallets"]
 )
 
 
 @router.get("/all")
-def list_wallets(db: Session = Depends(get_db)):
-    repo = WalletRepository(db)
-
-    wallets = repo.get_all()
-
-    print(wallets)
-    return wallets
+def list_wallets_route(db: Session = Depends(get_db)):
+    return list_wallets(db=db)
 
 
 @router.get("/{wallet_id}")
-def get_wallet(wallet_id: int, db: Session = Depends(get_db)):
-    """Returns the data of a chosen wallet by id."""
-    repo = WalletRepository(db)
-    wallet = repo.get_by_id(wallet_id)
-
-    if wallet is None:
-        raise HTTPException(status_code=404, detail="Wallet not found")
-
-    return wallet
+def get_wallet_route(wallet_id: int, db: Session = Depends(get_db)):
+    return get_wallet_by_id(wallet_id=wallet_id, db=db)

@@ -27,3 +27,5 @@ def get_all_trades(wallet_id: int, db: Session):
         "incoming_trades": incoming,
         "outgoing_trades": outgoing,
     }
+
+#speichern in der Datenbank -> update des service namens zu update wallet

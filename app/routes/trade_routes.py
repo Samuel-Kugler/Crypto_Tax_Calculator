@@ -5,7 +5,8 @@ from app.repositories.db import get_db
 from app.services.trade_service import get_all_trades
 
 router = APIRouter(
-    prefix="/trades"
+    prefix="/trades",
+    tags=["trades"]
 )
 
 
