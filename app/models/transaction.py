@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Text, Numeric, ForeignKey, func, TIMESTAMP
+from sqlalchemy import Column, Integer, Text, Numeric, ForeignKey, func, TIMESTAMP, UniqueConstraint, BigInteger
 from sqlalchemy.dialects.postgresql import ENUM
 from sqlalchemy.orm import relationship
 
@@ -9,7 +9,7 @@ from app.models.enums import DirectionEnum
 class Transaction(Base):
     __tablename__ = "transaction"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(BigInteger, primary_key=True, index=True)
 
     wallet_id = Column(
         Integer,
@@ -18,7 +18,7 @@ class Transaction(Base):
         index=True
     )
 
-    tx_hash = Column(Text, nullable=True)
+    tx_hash = Column(Text, nullable=False, index=True)
 
     direction = Column(
         ENUM(DirectionEnum,
@@ -59,3 +59,14 @@ class Transaction(Base):
     note = Column(Text, nullable=True)
 
     wallet = relationship("Wallet", back_populates="transactions")
+
+    from_address = Column(Text, nullable=False, index=True)
+
+    to_address = Column(Text, nullable=False, index=True)
+
+    chain = Column(Text, nullable=False)
+
+    __table_args__ = (
+        UniqueConstraint("wallet_id", "tx_hash", name="uq_transaction_wallet_txhash"),
+    )
+

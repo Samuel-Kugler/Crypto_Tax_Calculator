@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.repositories.db import get_db
-from app.services.trade_service import get_all_trades
+from app.services.update_wallet import get_all_trades
 
 router = APIRouter(
     prefix="/trades",
