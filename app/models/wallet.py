@@ -57,4 +57,10 @@ class Wallet(Base):
         nullable=False
     )
 
-    transactions = relationship("Transaction", back_populates="wallet")
+    transactions = relationship(
+        "Transaction",
+        back_populates="wallet",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )
+

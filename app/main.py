@@ -28,6 +28,6 @@ def index():
         <br>
         <a href="http://127.0.0.1:8000/transactions/all_transactions">➡️ All transactions</a>
         <br>
-        <a href="http://127.0.0.1:8000/trades/1/transfers">➡️ transfers for wallet 1</a>
+        <a href="http://127.0.0.1:8000/trades/2/transfers">➡️ transfers for wallet test</a>
     </p>
     """

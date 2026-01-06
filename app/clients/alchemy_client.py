@@ -40,7 +40,7 @@ def fetch_transfers_for_wallet(wallet: Wallet, direction: str):
         "jsonrpc": "2.0",
         "id": 1,
         "method": "alchemy_getAssetTransfers",
-        "params": [params],
+        "params": [params]
     }
 
     all_transfers = []

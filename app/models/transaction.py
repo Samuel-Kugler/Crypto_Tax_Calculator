@@ -66,7 +66,14 @@ class Transaction(Base):
 
     chain = Column(Text, nullable=False)
 
+    alchemy_unique_id = Column(Text, nullable=False, index=True)
+
     __table_args__ = (
-        UniqueConstraint("wallet_id", "tx_hash", name="uq_transaction_wallet_txhash"),
+        UniqueConstraint(
+            "wallet_id",
+            "alchemy_unique_id",
+            name="uq_transaction_wallet_alchemy_unique_id",
+        ),
     )
+
 
