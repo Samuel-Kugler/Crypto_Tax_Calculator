@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Text, TIMESTAMP, func, text
+from sqlalchemy import Column, Integer, Text, TIMESTAMP, func, text, ForeignKey, BigInteger
 from sqlalchemy.dialects.postgresql import ENUM
 from sqlalchemy.orm import relationship
 
@@ -56,6 +56,15 @@ class Wallet(Base):
         server_default=text("'active'"),
         nullable=False
     )
+
+    user_id = Column(
+        BigInteger,
+        ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True
+    )
+
+    user = relationship("User", back_populates="wallets")
 
     transactions = relationship(
         "Transaction",

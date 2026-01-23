@@ -24,13 +24,17 @@ class TransactionRepository:
             .all()
         )
 
-    def bulk_insert_ignore_duplicates(self, rows: list[dict[str, Any]]) -> None:
+    def bulk_insert_ignore_duplicates(self, rows: list[dict[str, Any]]) -> int:
         if not rows:
-            return
+            return 0
 
         statement = insert(Transaction).values(rows)
         statement = statement.on_conflict_do_nothing(
             index_elements=["wallet_id", "alchemy_unique_id"]
         )
+        statement = statement.returning(Transaction.id)
 
-        self.db.execute(statement)
+        result = self.db.execute(statement)
+        inserted_transactions = result.scalars().all()
+
+        return len(inserted_transactions)
