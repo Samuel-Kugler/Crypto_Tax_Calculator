@@ -13,3 +13,5 @@ router = APIRouter(
 @router.get("/all_transactions")
 def list_wallets(db: Session = Depends(get_db)):
     return get_transactions(db=db)
+
+

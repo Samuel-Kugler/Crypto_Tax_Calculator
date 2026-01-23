@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Depends
+from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import BaseModel, EmailStr
 from sqlalchemy.orm import Session
 
 from app.repositories.db import get_db
-from app.services.auth_service import register_new_user
+from app.services.auth_service import register_new_user, login_user
 router = APIRouter(
     prefix="/auth",
     tags=["auth"]
@@ -25,3 +26,13 @@ def register_user(
         password=data.password,
         db=db
     )
+
+
+@router.post("/login")
+def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    return login_user(
+        email=form_data.username,
+        password=form_data.password,
+        db=db
+    )
+
