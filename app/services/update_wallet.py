@@ -73,32 +73,35 @@ def get_all_trades(wallet_id: int, user_id: int, db: Session):
     if wallet.chain != "ETH":
         raise UnsupportedChainException(wallet.chain)
 
-    incoming = fetch_transfers_for_wallet(wallet, "IN")
-    normalized_incoming_trades = normalize_alchemy_transfers(wallet_id, incoming, "IN", chain=wallet.chain)
+    for page in fetch_transfers_for_wallet(wallet, "IN"):
+        yield normalize_alchemy_transfers(wallet_id, page, "IN", chain=wallet.chain)
 
-    outgoing = fetch_transfers_for_wallet(wallet, "OUT")
-    normalized_outgoing_trades = normalize_alchemy_transfers(wallet_id, outgoing, "OUT", chain=wallet.chain)
-
-    return normalized_incoming_trades + normalized_outgoing_trades
+    for page in fetch_transfers_for_wallet(wallet, "OUT"):
+        yield normalize_alchemy_transfers(wallet_id, page, "OUT", chain=wallet.chain)
 
 
 def update_wallet(wallet_id: int, user_id: int, db: Session) -> dict:
+    transaction_repository = TransactionRepository(db)
+
+    fetched_count = 0
+    inserted_transactions_counter = 0
+
     try:
-        rows = get_all_trades(wallet_id=wallet_id, user_id=user_id, db=db)
+        for rows_page in get_all_trades(wallet_id=wallet_id, user_id=user_id, db=db):
+            fetched_count += len(rows_page)
 
-        transaction_repository = TransactionRepository(db)
-        inserted_transactions_counter = transaction_repository.bulk_insert_ignore_duplicates(rows)
+            inserted_transactions_counter += transaction_repository.bulk_insert_ignore_duplicates(rows_page)
 
-        db.commit()
+            db.commit()
+
     except SQLAlchemyError as e:
         db.rollback()
         logger.exception("DB error while inserting transactions")
         raise DatabaseWriteException() from e
-
-    fetched_count = len(rows)
 
     return {
         "wallet_id": wallet_id,
         "fetched": fetched_count,
         "inserted": inserted_transactions_counter
     }
+

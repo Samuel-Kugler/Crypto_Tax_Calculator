@@ -43,8 +43,6 @@ def fetch_transfers_for_wallet(wallet: Wallet, direction: str):
         "params": [params]
     }
 
-    all_transfers = []
-
     with httpx.Client(timeout=20.0) as client:
         while True:
             response = client.post(url, json=payload)
@@ -53,7 +51,7 @@ def fetch_transfers_for_wallet(wallet: Wallet, direction: str):
 
             result = data.get("result") or {}
             transfers = result.get("transfers") or []
-            all_transfers.extend(transfers)
+            yield transfers
 
             page_key = result.get("pageKey")
             if not page_key:
@@ -61,5 +59,3 @@ def fetch_transfers_for_wallet(wallet: Wallet, direction: str):
 
             params["pageKey"] = page_key
             payload["params"] = [params]
-
-    return all_transfers

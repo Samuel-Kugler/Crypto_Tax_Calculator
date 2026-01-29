@@ -47,3 +47,5 @@ def create_wallet(db: Session, user_id: int, data: WalletCreate):
     except IntegrityError:
         db.rollback()
         raise HTTPException(status_code=409, detail="Wallet already exists")
+
+    #need to add an alchemy check later on so that no wallets with not working addresses can be saved to the database
