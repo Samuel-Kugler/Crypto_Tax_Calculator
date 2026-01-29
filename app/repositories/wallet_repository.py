@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from app.models.wallet import Wallet
+from app.models.enums import BlockchainEnum
 
 
 class WalletRepository:
@@ -22,3 +23,13 @@ class WalletRepository:
             .filter(Wallet.id == wallet_id, Wallet.user_id == user_id)
             .first()
         )
+
+    def create_wallet_for_user(self, user_id: int, address: str, chain: BlockchainEnum, name: str | None) -> Wallet:
+        wallet = Wallet(
+            user_id=user_id,
+            address=address,
+            chain=chain,
+            name=name,
+        )
+        self.db.add(wallet)
+        return wallet

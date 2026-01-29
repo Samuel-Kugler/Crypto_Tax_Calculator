@@ -3,10 +3,11 @@ from sqlalchemy.orm import Session
 
 from app.dependencies.auth import get_current_user
 from app.models.user import User
-from app.models.wallet import Wallet
 from app.repositories.db import get_db
 from app.services.update_wallet import update_wallet
 from app.services.wallet_service import list_wallets, get_wallet_by_id
+from app.services.wallet_service import WalletCreate, create_wallet
+
 
 router = APIRouter(
     prefix="/wallets",
@@ -39,6 +40,14 @@ def update_wallet_route(
 ):
     return update_wallet(wallet_id=wallet_id, user_id=current_user.id, db=db)
 
+
+@router.post("")
+def create_wallet_route(
+    data: WalletCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    return create_wallet(db, user_id=current_user.id, data=data)
 
 
 
