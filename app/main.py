@@ -10,6 +10,8 @@ from app.models import wallet, transaction, user  # noqa
 
 
 #uvicorn app.main:app --reload
+#uvicorn app.main:app --host 0.0.0.0 --port $PORT
+
 app = FastAPI(title="Crypto Tax Calculator")
 register_exception_handlers(app)
 
