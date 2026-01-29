@@ -8,4 +8,7 @@ passlib
 httpx
 pydantic[email]
 python-multipart
+argon2-cffi
+
+
 
