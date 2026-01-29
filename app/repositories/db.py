@@ -11,6 +11,16 @@ url = os.getenv("DATABASE_URL")
 if not url:
     raise RuntimeError("DATABASE_URL is missing")
 
+if url.startswith("postgres://"):
+    url = url.replace("postgres://", "postgresql://", 1)
+
+if "sslmode=" not in url:
+    if "?" in url:
+        url = url + "&sslmode=require"
+    else:
+        url = url + "?sslmode=require"
+
+
 engine = create_engine(
     url,
     pool_pre_ping=True,
