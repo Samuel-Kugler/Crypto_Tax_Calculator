@@ -1,6 +1,8 @@
 from sqlalchemy import Column, Integer, Text, TIMESTAMP, func, text, ForeignKey, BigInteger
 from sqlalchemy.dialects.postgresql import ENUM
 from sqlalchemy.orm import relationship
+from sqlalchemy import UniqueConstraint
+
 
 from app.repositories.db import Base
 from app.models.enums import BlockchainEnum, ActivityEnum
@@ -8,6 +10,10 @@ from app.models.enums import BlockchainEnum, ActivityEnum
 
 class Wallet(Base):
     __tablename__ = "wallet"
+
+    __table_args__ = (
+        UniqueConstraint("user_id", "address", "chain", name="uq_wallet_user_address_chain"),
+    )
 
     id = Column(
         Integer,

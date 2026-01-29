@@ -63,9 +63,9 @@ def normalize_alchemy_transfers(wallet_id: int, trades: list[dict], direction: s
     return result
 
 
-def get_all_trades(wallet_id: int, db: Session):
+def get_all_trades(wallet_id: int, user_id: int, db: Session):
     repo = WalletRepository(db)
-    wallet = repo.get_by_id(wallet_id)
+    wallet = repo.get_by_id_for_user(wallet_id=wallet_id, user_id=user_id)
 
     if wallet is None:
         raise WalletNotFoundException("This wallet doesn't exist.")
@@ -82,9 +82,9 @@ def get_all_trades(wallet_id: int, db: Session):
     return normalized_incoming_trades + normalized_outgoing_trades
 
 
-def update_wallet(wallet_id:int, db: Session) -> dict:
+def update_wallet(wallet_id: int, user_id: int, db: Session) -> dict:
     try:
-        rows = get_all_trades(wallet_id, db=db)
+        rows = get_all_trades(wallet_id=wallet_id, user_id=user_id, db=db)
 
         transaction_repository = TransactionRepository(db)
         inserted_transactions_counter = transaction_repository.bulk_insert_ignore_duplicates(rows)

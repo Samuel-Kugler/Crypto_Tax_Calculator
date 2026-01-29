@@ -14,21 +14,31 @@ router = APIRouter(
 )
 
 
-@router.get("/all")
+@router.get("")
 def get_all_wallets(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    return db.query(Wallet).filter(Wallet.user_id == current_user.id).all()
+    return list_wallets(db=db, user_id=current_user.id)
 
 
 @router.get("/{wallet_id}")
-def get_wallet_route(wallet_id: int, db: Session = Depends(get_db)):
-    return get_wallet_by_id(wallet_id=wallet_id, db=db)
+def get_wallet_route(
+    wallet_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    return get_wallet_by_id(wallet_id=wallet_id, db=db, user_id=current_user.id)
 
 
-@router.get("/{wallet_id}/update_wallet")
-def get_number_of_new_transfers(wallet_id: int, db: Session = Depends(get_db)):
-    return update_wallet(wallet_id=wallet_id, db=db)
+@router.post("/{wallet_id}/update_wallet")
+def update_wallet_route(
+    wallet_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    return update_wallet(wallet_id=wallet_id, user_id=current_user.id, db=db)
+
+
 
 
