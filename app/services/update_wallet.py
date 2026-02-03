@@ -41,6 +41,9 @@ def normalize_alchemy_transfers(wallet_id: int, trades: list[dict], direction: s
         asset_symbol = trade.get("asset") or "UNKNOWN"
         amount = trade.get("value") or 0
 
+        if abs(float(trade.get("value") or 0)) >= 1e42:
+            continue
+
         new_row = {
             "wallet_id": wallet_id,
             "tx_hash":  trade.get("hash"),
