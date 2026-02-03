@@ -32,7 +32,7 @@ class Transaction(Base):
     asset_symbol = Column(Text, nullable=False)
 
     amount = Column(
-        Numeric(38, 18),
+        Numeric(60, 18),
         nullable=False
     )
 
